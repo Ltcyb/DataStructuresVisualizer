@@ -11,39 +11,39 @@ export function NavBar() {
           </Link>
         </li>
         <li>
-          <Link href="/arrays">
+          <Link href="/data-structures/arrays">
             <span className="flex items-center gap-4">Arrays</span>
           </Link>
         </li>
         <li>
-          <Link href="/lists-sets-maps">
+          <Link href="/data-structures/lists-sets-maps">
             <span className="flex items-center gap-4">
               Lists, Sets, and Maps
             </span>
           </Link>
         </li>
         <li>
-          <Link href="/queues-and-stacks">
+          <Link href="/data-structures/queues-and-stacks">
             <span className="flex items-center gap-4">Queues and Stacks</span>
           </Link>
         </li>
         <li>
-          <Link href="/heaps">
+          <Link href="/data-structures/heaps">
             <span className="flex items-center gap-4">Heaps</span>
           </Link>
         </li>
         <li>
-          <Link href="/disjoint-set">
+          <Link href="/data-structures/disjoint-set">
             <span className="flex items-center gap-4">Disjoint Set</span>
           </Link>
         </li>
         <li>
-          <Link href="/graphs">
+          <Link href="/algorithms/graphs">
             <span className="flex items-center gap-4">Graphs</span>
           </Link>
         </li>
         <li>
-          <Link href="/sorts">
+          <Link href="/algorithms/sorts">
             <span className="flex items-center gap-4">Sorts</span>
           </Link>
         </li>

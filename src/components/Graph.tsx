@@ -8,8 +8,10 @@ export function Graph() {
 
   const [nodes, setNodes] = useState<any[]>([]);
 
+  const [highlightedNodes, setHighlightedNodes] = useState();
+
   const addNode = () => {
-    if (spaceRef.current && nodes.length <= MAX_NODES) {
+    if (spaceRef.current && nodes.length < MAX_NODES) {
       setNodes([
         ...nodes,
         <CircleNode
@@ -27,11 +29,14 @@ export function Graph() {
   };
 
   return (
-    <div className="max-h-full min-h-full min-w-full max-w-full">
-      <div className="h-screen w-full flex-none p-2" ref={spaceRef}>
+    <div className="relative max-h-full min-h-full min-w-full max-w-full flex-none flex-col">
+      <div
+        className="flex max-h-screen max-w-full flex-wrap p-2"
+        ref={spaceRef}
+      >
         {nodes}
       </div>
-      <nav className="fixed bottom-0 left-1/2">
+      <nav className="absolute bottom-0 w-full">
         <ul className="flex flex-row place-content-center gap-4 self-center p-2">
           <li>
             <button className="bg-green-400 p-2" onClick={addNode}>
@@ -61,7 +66,7 @@ function CircleNode({ offsetParent }: CircleNodeProps) {
   return (
     <Draggable nodeRef={nodeRef} offsetParent={offsetParent} bounds="parent">
       <div
-        className={`flex h-20 w-20 items-center justify-center rounded-full border-2 border-black bg-white`}
+        className={`flex h-20 w-20 flex-wrap items-center justify-center rounded-full border-2 border-black bg-white`}
         ref={nodeRef}
       >
         <input

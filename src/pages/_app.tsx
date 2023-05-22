@@ -23,8 +23,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
       </Head>
       <main>
         <div className="max-w-screen flex max-h-screen">
-          {/* <NavBar /> */}
-          <div className="flex-grow">
+          <NavBar />
+          <div className="flex-1">
             <Component {...pageProps} />
           </div>
         </div>

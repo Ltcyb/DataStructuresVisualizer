@@ -3,8 +3,8 @@ import { useState } from "react";
 
 export function NavBar() {
   return (
-    <nav className="left-0 top-0 z-10 flex h-screen bg-blue-400 px-2 py-4 pr-8">
-      <ul className="flex flex-col items-start gap-2 whitespace-nowrap">
+    <nav className="top-0 flex h-screen flex-shrink-0 overflow-y-auto bg-blue-400 px-4 py-2">
+      <ul className="flex flex-col items-start gap-2 whitespace-nowrap ">
         <li>
           <Link href="/">
             <span className="flex items-center gap-4">Home</span>

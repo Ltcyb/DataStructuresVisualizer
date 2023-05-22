@@ -4,7 +4,7 @@ import Draggable from "react-draggable";
 const MAX_NODES = 10;
 
 export function Graph() {
-  const spaceRef = useRef<HTMLDivElement>(null);
+  const spaceRef = useRef(null);
 
   const [nodes, setNodes] = useState<any[]>([]);
 
@@ -27,7 +27,7 @@ export function Graph() {
   };
 
   return (
-    <div className="flex max-h-full min-h-full min-w-full max-w-full">
+    <div className="max-h-full min-h-full min-w-full max-w-full">
       <div className="h-screen w-full flex-none p-2" ref={spaceRef}>
         {nodes}
       </div>

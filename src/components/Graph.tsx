@@ -31,7 +31,7 @@ export function Graph() {
   return (
     <div className="relative max-h-full min-h-full min-w-full max-w-full flex-none flex-col">
       <div
-        className="flex max-h-screen max-w-full flex-wrap p-2"
+        className="flex h-screen max-h-screen w-full max-w-full flex-wrap gap-4 p-2"
         ref={spaceRef}
       >
         {nodes}

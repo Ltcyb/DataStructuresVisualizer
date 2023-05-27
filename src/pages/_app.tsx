@@ -6,7 +6,7 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import Head from "next/head";
-import { NavBar } from "~/components/NavBar";
+import { NavBar } from "~/components/nav-bars/SideNavBar";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -18,7 +18,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <title>Data Structures Visualizer</title>
         <meta
           name="description"
-          content="This is a data structures visualizer"
+          content="Interactive data structures and algorithms visualizer"
         />
       </Head>
       <main>

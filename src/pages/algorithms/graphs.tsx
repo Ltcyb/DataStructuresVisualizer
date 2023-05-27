@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { Graph } from "~/components/Graph";
-import { NavBar } from "~/components/NavBar";
+import { NavBar } from "~/components/nav-bars/SideNavBar";
 
 const Home: NextPage = () => {
   return <Graph />;

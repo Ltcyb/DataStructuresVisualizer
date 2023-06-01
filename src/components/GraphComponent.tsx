@@ -1,37 +1,51 @@
-import {
-  useEffect,
-  useLayoutEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { CircleNode } from "./graph-stuff/CircleNode";
 import { ControlPosition } from "react-draggable";
+import { Edge } from "./graph-stuff/Edge";
 
 const MAX_NODES = 10;
 
 type Node = {
   uuid: string;
-  selected: boolean;
-  disabled: boolean;
   value: string;
   position: ControlPosition;
+  selected: boolean;
+  disabled: boolean;
+};
+
+type Edge = {
+  uuid: string;
+  weight: number;
+  node1: ControlPosition;
+  node2: ControlPosition;
+  selected: boolean;
+  disabled: boolean;
 };
 
 export function Graph() {
   //nodes logic
-  const [nodes, dispatch] = useReducer(nodeReducer, []);
+  const [nodes, nodesDispatch] = useReducer(nodesReducer, []);
+  const [edges, edgesDispatch] = useReducer(edgesReducer, []);
   const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
-    dispatch({
+    nodesDispatch({
+      type: "disable",
+      disabled: disabled,
+    });
+    edgesDispatch({
       type: "disable",
       disabled: disabled,
     });
   }, [disabled]);
 
   const setSelected = (uuid: string, selected: boolean) => {
-    dispatch({
+    nodesDispatch({
+      type: "setSelected",
+      uuid: uuid,
+      selected: selected,
+    });
+    edgesDispatch({
       type: "setSelected",
       uuid: uuid,
       selected: selected,
@@ -39,7 +53,7 @@ export function Graph() {
   };
 
   const setPosition = (uuid: string, position: ControlPosition) => {
-    dispatch({
+    nodesDispatch({
       type: "setPosition",
       uuid: uuid,
       position: position,
@@ -47,7 +61,7 @@ export function Graph() {
   };
 
   const setValue = (uuid: string, value: string) => {
-    dispatch({
+    nodesDispatch({
       type: "setValue",
       uuid: uuid,
       value: value,
@@ -55,7 +69,7 @@ export function Graph() {
   };
 
   const addNode = () => {
-    dispatch({
+    nodesDispatch({
       type: "add",
       value: "0",
       selected: false,
@@ -66,38 +80,63 @@ export function Graph() {
 
   //use find to change somehting in arraay + map to replace old
   const removeNode = () => {
-    dispatch({
+    nodesDispatch({
       type: "remove",
     });
   };
 
-  //edges logic
-  const [edges, setEdges] = useState<any[]>([]);
-
   const addEdge = () => {
-    if (nodes.length > 1) {
-      console.log("add edge");
-    }
+    edgesDispatch({
+      type: "add",
+      nodes: nodes,
+      selected: false,
+      weight: 0,
+      disabled: disabled,
+    });
   };
 
   const removeEdge = () => {
-    console.log("removed edge");
+    edgesDispatch({
+      type: "remove",
+    });
+  };
+
+  const setWeight = (uuid: string, weight: number) => {
+    edgesDispatch({
+      type: "setWeight",
+      uuid: uuid,
+      weight: weight,
+    });
   };
 
   return (
     <div className="relative flex max-h-full min-h-full min-w-full max-w-full">
-      <div className="flex max-h-screen min-h-screen min-w-full max-w-full p-2">
+      <div className="flex max-h-screen min-h-screen min-w-full max-w-full">
         {nodes.map((item) => (
           <CircleNode
             key={item.uuid}
             uuid={item.uuid}
-            selected={item.selected}
-            position={item.position}
-            setSelected={setSelected}
-            setPosition={setPosition}
-            disabled={item.disabled}
             value={item.value}
             setValue={setValue}
+            position={item.position}
+            setPosition={setPosition}
+            selected={item.selected}
+            setSelected={setSelected}
+            disabled={item.disabled}
+          />
+        ))}
+
+        {edges.map((item) => (
+          <Edge
+            key={item.uuid}
+            uuid={item.uuid}
+            weight={item.weight}
+            setWeight={setWeight}
+            p1={item.node1}
+            p2={item.node2}
+            selected={item.selected}
+            setSelected={setSelected}
+            disabled={item.disabled}
           />
         ))}
       </div>
@@ -112,6 +151,7 @@ export function Graph() {
                   : "bg-green-400"
               } p-2`}
               onClick={addNode}
+              disabled={nodes.length >= MAX_NODES || disabled}
             >
               Add Node
             </button>
@@ -122,7 +162,7 @@ export function Graph() {
                 nodes.length > 0 && !disabled ? "bg-red-400" : "bg-gray-400"
               } p-2`}
               onClick={removeNode}
-              disabled={nodes.length <= 0 && disabled}
+              disabled={nodes.length <= 0 || disabled}
             >
               Delete Node
             </button>
@@ -147,7 +187,7 @@ export function Graph() {
                 nodes.length > 1 && !disabled ? "bg-green-400" : "bg-gray-400"
               } p-2`}
               onClick={addEdge}
-              disabled={nodes.length <= 1 && disabled}
+              disabled={nodes.length <= 1 || disabled}
             >
               Add Edge
             </button>
@@ -158,7 +198,7 @@ export function Graph() {
                 edges.length > 0 && !disabled ? "bg-red-400" : "bg-gray-400"
               } p-2`}
               onClick={removeEdge}
-              disabled={edges.length <= 0 && disabled}
+              disabled={edges.length <= 0 || disabled}
             >
               Delete Edge
             </button>
@@ -169,7 +209,7 @@ export function Graph() {
   );
 }
 
-function nodeReducer(nodes: Node[], action): Node[] {
+function nodesReducer(nodes: Node[], action: any): Node[] {
   switch (action.type) {
     case "add": {
       if (nodes.length < MAX_NODES) {
@@ -188,7 +228,7 @@ function nodeReducer(nodes: Node[], action): Node[] {
 
     case "remove": {
       const temp = [...nodes];
-      const result = temp.filter((n) => !n.selected);
+      const result = temp.filter((item) => !item.selected);
       return result;
     }
 
@@ -198,7 +238,8 @@ function nodeReducer(nodes: Node[], action): Node[] {
       if (id < 0) return [...nodes];
 
       const temp = [...nodes];
-      temp[id].selected = action.selected;
+
+      temp[id]!.selected = action.selected;
 
       return temp;
     }
@@ -210,7 +251,21 @@ function nodeReducer(nodes: Node[], action): Node[] {
 
       const temp = [...nodes];
 
-      temp[id].position = action.position;
+      for (let i = 0; i < temp.length; i++) {
+        if (i !== id) {
+          const xDiff = action.position.x - temp[i]!.position.x;
+          const yDiff = action.position.y - temp[i]!.position.y;
+          const dist = Math.hypot(xDiff, yDiff);
+          if (dist < 100) {
+            action.position = {
+              x: temp[i]!.position.x + xDiff * (100 / dist),
+              y: temp[i]!.position.y + yDiff * (100 / dist),
+            };
+          }
+        }
+      }
+
+      temp[id]!!!!!!!!!!!!!.position = action.position;
 
       return temp;
     }
@@ -221,13 +276,73 @@ function nodeReducer(nodes: Node[], action): Node[] {
       if (id < 0) return [...nodes];
 
       const temp = [...nodes];
-      temp[id].value = action.value;
+      temp[id]!.value = action.value;
       console.log(action.value);
       return temp;
     }
 
     case "disable": {
       const temp = [...nodes];
+      temp.forEach((n) => {
+        n.disabled = action.disabled;
+      });
+      return temp;
+    }
+  }
+
+  throw Error("Unknown action: " + action.type);
+}
+
+function edgesReducer(edges: Edge[], action: any): Edge[] {
+  switch (action.type) {
+    case "add": {
+      const temp = action.nodes.filter((item: Node) => item.selected);
+
+      if (temp.length === 2) {
+        return [
+          ...edges,
+          {
+            uuid: crypto.randomUUID(),
+            node1: temp[0]?.position,
+            node2: temp[1]?.position,
+            weight: action.weight,
+            selected: action.selected,
+            disabled: action.disabled,
+          },
+        ];
+      }
+    }
+
+    case "remove": {
+      const temp = [...edges];
+      const result = temp.filter((item) => !item.selected);
+      return result;
+    }
+
+    case "setSelected": {
+      const id = edges.findIndex((item) => item.uuid === action.uuid);
+
+      if (id < 0) return [...edges];
+
+      const temp = [...edges];
+      temp[id]!.selected = action.selected;
+
+      return temp;
+    }
+
+    case "setWeight": {
+      const id = edges.findIndex((item) => item.uuid === action.uuid);
+
+      if (id < 0) return [...edges];
+
+      const temp = [...edges];
+      temp[id]!.weight = action.weight;
+
+      return temp;
+    }
+
+    case "disable": {
+      const temp = [...edges];
       temp.forEach((n) => {
         n.disabled = action.disabled;
       });

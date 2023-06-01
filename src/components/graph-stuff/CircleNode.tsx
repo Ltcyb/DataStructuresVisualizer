@@ -70,7 +70,6 @@ export function CircleNode({
             }
           }}
           onFocus={() => setSelected(uuid, true)}
-          onBlur={() => setSelected(uuid, false)}
         />
       </div>
     </Draggable>

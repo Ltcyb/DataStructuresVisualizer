@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { Graph } from "~/components/Graph";
+import { Graph } from "~/components/GraphComponent";
 
 const Home: NextPage = () => {
   return <Graph />;

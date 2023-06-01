@@ -35,7 +35,9 @@ export function NavBar() {
         </li>
       </ul>
       <ul className="absolute bottom-0 flex flex-col items-start gap-2 whitespace-nowrap p-2 ">
-        <li>Contatct</li>
+        <li>
+          <Link href="/contact">Contact</Link>
+        </li>
       </ul>
     </nav>
   );

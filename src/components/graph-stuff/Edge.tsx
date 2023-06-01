@@ -1,38 +1,41 @@
 import { useState } from "react";
+import Draggable from "react-draggable";
 
 type EdgeProps = {
+  uuid: string;
   p1: { x: number; y: number };
   p2: { x: number; y: number };
-  weight?: number;
+  weight: number;
+  setWeight: (uuid: string, x: number) => void;
+  selected: boolean;
+  setSelected: (uuid: string, bool: boolean) => void;
+  disabled: boolean;
 };
 
-export function Edge({ p1, p2, weight = 0 }: EdgeProps) {
-  const [value, setValue] = useState(weight.toString);
-
+export function Edge({
+  uuid,
+  p1,
+  p2,
+  weight = 0,
+  setWeight,
+  selected,
+  setSelected,
+  disabled,
+}: EdgeProps) {
   return (
-    <svg className="z-1" height={p2.y - p1.y} width={p2.x - p1.x}>
-      <text
-        fill="black"
-        x={(p1.x + p2.x) / 2}
-        y={(p2.y + p1.y) / 2}
-        rotate="auto"
-      >
+    <svg>
+      <line></line>
+      <text>
         <input
+          className="border-2 border-black bg-white"
           placeholder="0"
-          value={value}
+          value={weight}
           onChange={(e) => {
-            setValue(e.target.value);
+            setWeight(uuid, Number(e.target.value));
           }}
+          disabled={disabled}
         />
       </text>
-      <line
-        strokeWidth={2}
-        stroke="black"
-        x1={p1.x}
-        x2={p2.x}
-        y1={p1.y}
-        y2={p2.y}
-      />
     </svg>
   );
 }
